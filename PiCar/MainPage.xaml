@@ -6,8 +6,50 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+   
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ScrollViewer>
+        <StackPanel>
+          
+        <ListView x:Name="lv_Episodes">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:Episode">
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind podcastName}"
+                           Margin="5,0,5,5"
+                           FontSize="24" 
+                           FontStyle="Italic" 
+                           FontWeight="SemiBold"
+                           Foreground="DarkBlue" />
+                        <TextBlock Text="{x:Bind name}"
+                           Margin="5,0,5,5"
+                           FontSize="24" 
+                           FontStyle="Italic" 
+                           FontWeight="SemiBold"
+                           Foreground="DarkBlue" />
+                        <TextBlock Text="{x:Bind pubDate.Date}" 
+                           Margin="5,0,5,5"
+                           FontSize="16"
+                           Foreground="DarkGray" 
+                           Opacity="0.8" />
+                        <TextBlock Text="{x:Bind url}" 
+                           Margin="5,0,5,5"
+                           FontSize="16"
+                           Foreground="DarkGray" 
+                           Opacity="0.8" />
+                        <TextBlock Text="{x:Bind status}" 
+                           Margin="5,0,5,5"
+                           FontSize="16"
+                           Foreground="DarkGray" 
+                           Opacity="0.8" />
+                            <Button Name="btn_Select" Margin="5,0,5,5" Background="Blue" Foreground="White" Content="Do Something"/>
+                        </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            </ListView>
+            
 
+        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
