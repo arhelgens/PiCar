@@ -26,6 +26,7 @@ namespace PiCar
             InitializeDB();
 
             this.InitializeComponent();
+            
             var test = Task.Run(() => GetSubscribedListAsync()).Result;
             var listToDispaly = new List<Episode>();
             foreach (var item in test)
@@ -36,6 +37,7 @@ namespace PiCar
 
             lv_Episodes.ItemsSource = listToDispaly;
         }
+        
         private async Task<List<Podcast>> GetSubscribedListAsync()
         {
             var subList = new List<Podcast>();
@@ -96,6 +98,39 @@ namespace PiCar
                 {
                     await file.CopyAsync(localFolder, "PodcastDB.db", Windows.Storage.NameCollisionOption.FailIfExists);
                 }
+            }
+        }
+
+        private void _btn_Select_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedButton = e.OriginalSource as Button;
+            selectedButton.Content = "Downloading";
+            var selectedEpisode = selectedButton.DataContext as Episode;
+            Task.Run(()=> selectedEpisode.DownloadAsync()).Wait();
+            selectedButton.Content = "Play";
+        }
+
+        private void _btn_Select_Loaded(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            var btn = sender as Button;
+            if (btn.DataContext == null)
+                return;
+
+            var episode = btn.DataContext as Episode;
+            
+            switch (episode.status)
+            {
+                case "New":
+                    btn.Content = "Download";
+                    break;
+                case "Downloaded":
+                    btn.Content = "Play";
+                    break;
+                case "Played":
+                    btn.Content = "Delete";
+                    break;
+                default:
+                    break;
             }
         }
     }

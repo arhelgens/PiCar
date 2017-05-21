@@ -11,6 +11,8 @@ using System.Xml.Linq;
 using System.Net.Http;
 using System.Diagnostics;
 using Microsoft.Data.Sqlite;
+using Windows.Storage;
+using Windows.Networking.BackgroundTransfer;
 
 namespace PiCar
 {
@@ -21,6 +23,32 @@ namespace PiCar
         public string url;
         public string status = null;
         public DateTime pubDate;
+
+        public async Task DownloadAsync()
+        {
+            Uri source = new Uri(url);
+            var localFolder = ApplicationData.Current.LocalFolder;
+            
+            StorageFile destinationFile = await localFolder.CreateFileAsync(
+                name + ".mp3", CreationCollisionOption.GenerateUniqueName);
+
+            BackgroundDownloader downloader = new BackgroundDownloader();
+            DownloadOperation download = downloader.CreateDownload(source, destinationFile);
+            await download.StartAsync();
+            while (download.Progress.Status != BackgroundTransferStatus.Completed )
+            {
+            }
+            var existingFile = await localFolder.TryGetItemAsync("PodcastDB.db");
+            var conString = "Data Source=" + existingFile.Path + ";";
+            var cmdString = "UPDATE Episodes " +
+                "SET Status = 'Downloaded' " +
+                "WHERE Title = '" + name + "'";
+            SqliteConnection cn = new SqliteConnection(conString);
+            SqliteCommand cmd = new SqliteCommand(cmdString, cn);
+            cn.Open();
+            cmd.ExecuteNonQuery();
+            cn.Close();
+        }
     }
     class Podcast
     {

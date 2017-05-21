@@ -42,7 +42,7 @@
                            FontSize="16"
                            Foreground="DarkGray" 
                            Opacity="0.8" />
-                            <Button Name="btn_Select" Margin="5,0,5,5" Background="Blue" Foreground="White" Content="Do Something"/>
+                            <Button Name="btn_Select" Margin="5,0,5,5" Background="Blue" Foreground="White" Content="Do Something" Click="_btn_Select_Click" DataContextChanged="_btn_Select_Loaded"/>
                         </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
