@@ -72,26 +72,11 @@ namespace PiCar
 
         private async void InitializeDB()
         {
-            //var dbFile = ApplicationData.Current.LocalFolder.TryGetItemAsync("\\Assets\\PodcastDB.db") as StorageFile;
-
-            ////await ApplicationData.Current.LocalFolder.TryGetItemAsync("PodcastDB.db") as StorageFile;
-
-            //if (null == dbFile)
-            //{
-            //    var localFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-
-            //    string dbFileName = @"Assets\PodcastDB.db";
-            //    var originalDbFile = await localFolder.GetFileAsync(dbFileName);
-            //    if (null != originalDbFile)
-            //        dbFile = await originalDbFile.CopyAsync(localFolder, "PodcastDB.db", NameCollisionOption.ReplaceExisting);
-            //}
-            // Check if the file is already present in the Local folder
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var existingFile = await localFolder.TryGetItemAsync("PodcastDB.db");
 
             if (existingFile == null)
             {
-                // Copy the file from the install folder to the local folder
                 var folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
                 var file = await folder.GetFileAsync("PodcastDB.db");
                 if (file != null)
@@ -104,10 +89,27 @@ namespace PiCar
         private void _btn_Select_Click(object sender, RoutedEventArgs e)
         {
             var selectedButton = e.OriginalSource as Button;
-            selectedButton.Content = "Downloading";
             var selectedEpisode = selectedButton.DataContext as Episode;
-            Task.Run(()=> selectedEpisode.DownloadAsync()).Wait();
-            selectedButton.Content = "Play";
+
+            switch (selectedButton.Content)
+            {
+                case "Download":
+                    selectedButton.Content = "Downloading";
+                    Task.Run(() => selectedEpisode.DownloadAsync()).Wait();
+                    selectedButton.Content = "Play";
+                    break;
+                case "Play":
+                    //Add call to play podcast
+                    throw new NotImplementedException();
+                    break;
+                case "Delete":
+                    //Add call to delete podcast
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    throw new NotImplementedException();
+                    break;
+            }
         }
 
         private void _btn_Select_Loaded(FrameworkElement sender, DataContextChangedEventArgs args)

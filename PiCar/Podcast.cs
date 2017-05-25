@@ -38,6 +38,7 @@ namespace PiCar
             while (download.Progress.Status != BackgroundTransferStatus.Completed )
             {
             }
+
             var existingFile = await localFolder.TryGetItemAsync("PodcastDB.db");
             var conString = "Data Source=" + existingFile.Path + ";";
             var cmdString = "UPDATE Episodes " +
